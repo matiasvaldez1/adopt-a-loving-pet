@@ -8,7 +8,7 @@ const { location, locations } = Astro.props;
 ---
 
 <select class="flex-1" name="location">
-	<option value="">All locations</option>
+	<option value="">Cualquier lugar</option>
 	{
 		locations.map((locationOption) => (
 			<option value={locationOption} selected={location === locationOption ? 'true' : false}>

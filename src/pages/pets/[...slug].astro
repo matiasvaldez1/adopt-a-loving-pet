@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import Layout from '@layouts/Default.astro';
-import { db, JobPosting, JobType, eq, Company } from 'astro:db';
+import { db, PetPosting, PetType, eq, Poster } from 'astro:db';
 import TypeBadge from '@components/TypeBadge.astro';
 import LocationBadge from '@components/LocationBadge.astro';
 import { Image } from 'astro:assets';
@@ -9,58 +9,58 @@ import { Image } from 'astro:assets';
 export const prerender = true;
 
 export const getStaticPaths = (async () => {
-	const jobs = await db
+	const pets = await db
 		.select()
-		.from(JobPosting)
-		.innerJoin(JobType, eq(JobPosting.type, JobType.id))
-		.innerJoin(Company, eq(JobPosting.companyId, Company.id));
+		.from(PetPosting)
+		.innerJoin(PetType, eq(PetPosting.type, PetType.id))
+		.innerJoin(Poster, eq(PetPosting.posterId, Poster.id));
 
-	return jobs.map((job) => ({
+	return pets.map((pet) => ({
 		params: {
-			slug: job.JobPosting.id,
+			slug: pet.PetPosting.id,
 		},
 		props: {
-			job: job.JobPosting,
-			company: job.Company,
-			type: job.JobType,
+			pet: pet.PetPosting,
+			poster: pet.Poster,
+			type: pet.PetType,
 		},
 	}));
 }) satisfies GetStaticPaths;
 
 interface Props {
-	job: typeof JobPosting.$inferSelect;
-	company: typeof Company.$inferSelect;
-	type: typeof JobType.$inferSelect;
+	pet: typeof PetPosting.$inferSelect;
+	poster: typeof Poster.$inferSelect;
+	type: typeof PetType.$inferSelect;
 }
 
-const { job, company, type } = Astro.props;
+const { pet, poster, type } = Astro.props;
 ---
 
 <Layout>
 	<section class="mb-10 mt-12 md:mt-32">
 		<img class="absolute inset-0 right-0 -z-10" src="/bg-header.svg" />
-		<h1>{job.title}</h1>
+		<h1>{pet.title}</h1>
 	</section>
 	<section class="flex flex-col gap-10 bg-[#E1E2EB] py-10 md:flex-row dark:bg-[#15161F]">
 		<div
 			class="border-1 prose dark:prose-invert w-full rounded-md bg-white p-4 sm:p-8 md:p-16 dark:bg-black"
-			set:html={job.richText}
+			set:html={pet.richText}
 		/>
 		<div class="flex flex-col items-center gap-6 text-center">
-			<Image alt="" src={company.logo} class="size-28 flex-shrink-0 rounded-md" inferSize />
+			<Image alt="" src={poster.profilePicture} class="size-28 flex-shrink-0 rounded-md" inferSize />
 			<div>
-				<h2>{company.title}</h2>
-				<p class="font-normal">{job.description}</p>
+				<h2>{poster.name}</h2>
+				<p class="font-normal">{poster.presentation}</p>
 			</div>
 			<hr class="w-full border-[#BFC1D4]" />
 			<div class="flex gap-2">
 				<TypeBadge>{type.title}</TypeBadge>
-				<LocationBadge>{job.location}</LocationBadge>
+				<LocationBadge>{pet.location}</LocationBadge>
 			</div>
 			<p class="self-start font-mono text-xs">
-				Posted {job.posted.toLocaleDateString()}
+				Publicado {pet.posted.toLocaleDateString()}
 			</p>
-			<button class="w-full">Apply</button>
+			<button class="w-full">Adoptar</button>
 		</div>
 	</section>
 </Layout>

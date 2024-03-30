@@ -1,24 +1,24 @@
 ---
 import Layout from '@layouts/Default.astro';
-import JobCard from '@components/JobCard.astro';
+import PetCard from '@components/PetCard.astro';
 import FormFilter from '@components/FormFilter.astro';
-import JobList from '@components/JobList.astro';
-import JobListHeader from '@components/JobListHeader.astro';
-import { db, eq, JobPosting, like, and, asc, desc, JobType, Company } from 'astro:db';
+import PetList from '@components/PetList.astro';
+import PetListHeader from '@components/PetListHeader.astro';
+import { db, eq, like, and, asc, desc, PetPosting, PetType, Poster } from 'astro:db';
 
-const jobs = await db
+const pets = await db
 	.select()
-	.from(JobPosting)
-	.innerJoin(JobType, eq(JobPosting.type, JobType.id))
-	.innerJoin(Company, eq(JobPosting.companyId, Company.id));
-const locations = [...new Set(jobs.map((job) => job.JobPosting.location))];
-const types = await db.select().from(JobType);
+	.from(PetPosting)
+	.innerJoin(PetType, eq(PetPosting.type, PetType.id))
+	.innerJoin(Poster, eq(PetPosting.posterId, Poster.id));
+const locations = [...new Set(pets.map((pet) => pet.PetPosting.location))];
+const types = await db.select().from(PetType);
 
-let returnedJobs = jobs;
+let returnedPets = pets;
 
 const sortOptions = [
-	{ name: 'Latest First', value: 'desc' },
-	{ name: 'Oldest First', value: 'asc' },
+	{ name: 'Mas nuevos primero', value: 'desc' },
+	{ name: 'Mas viejos primero', value: 'asc' },
 ];
 
 if (Astro.request.method === 'POST') {
@@ -46,54 +46,53 @@ const location = prefilled?.get('location');
 
 const query = db
 	.select()
-	.from(JobPosting)
-	.innerJoin(JobType, eq(JobPosting.type, JobType.id))
-	.innerJoin(Company, eq(JobPosting.companyId, Company.id));
+	.from(PetPosting)
+	.innerJoin(PetType, eq(PetPosting.type, PetType.id))
+	.innerJoin(Poster, eq(PetPosting.posterId, Poster.id));
 
 query.where(
 	and(
-		like(JobPosting.title, keyword === null ? `%%` : `%${keyword}%`),
+		like(PetPosting.title, keyword === null ? `%%` : `%${keyword}%`),
 		// @ts-ignore
 		type !== '' && typeof type === 'string' ? eq(JobType.value, type) : true,
 		// @ts-ignore
-		location !== '' && typeof location === 'string' ? eq(JobPosting.location, location) : true,
+		location !== '' && typeof location === 'string' ? eq(PetPosting.location, location) : true,
 	),
 );
 
 const sorting = Astro.url.searchParams.get('sort') ?? 'desc';
 if (sorting != null) {
 	if (sorting === 'asc') {
-		query.orderBy(asc(JobPosting.posted));
+		query.orderBy(asc(PetPosting.posted));
 	} else if (sorting === 'desc') {
-		query.orderBy(desc(JobPosting.posted));
+		query.orderBy(desc(PetPosting.posted));
 	}
 }
 
-returnedJobs = await query.execute();
+returnedPets = await query.execute();
 ---
 
 <Layout>
 	<section class="relative mb-10 mt-32">
-		<img class="absolute -bottom-10 right-0 -z-10" src="/bg-header.svg" />
-		<h1>Your new career is waiting</h1>
+		<h1>Tu nueva mascota te está esperando</h1>
 		<FormFilter {prefilled} {types} {locations} {sorting} {location} {type} />
 	</section>
-	<JobList>
+	<PetList>
 		{
-			returnedJobs.length > 0 ? (
+			returnedPets.length > 0 ? (
 				<>
-					<JobListHeader numberOfJobs={returnedJobs.length} selectedSort={sorting} {sortOptions} />
+					<PetListHeader numberOfPets={returnedPets.length} selectedSort={sorting} {sortOptions} />
 					<ul class="flex flex-col gap-4">
-						{returnedJobs.map((job) => (
-							<JobCard job={job.JobPosting} type={job.JobType} company={job.Company} />
+						{returnedPets.map((pet) => (
+							<PetCard pet={pet.PetPosting} type={pet.PetType} poster={pet.Poster} />
 						))}
 					</ul>
 				</>
 			) : (
 				<>
-					<p>No jobs found for the selected filter 🤷‍♂️</p>
+					<p>No hay mascotas con el filtro seleccionado 🤷‍♂️</p>
 				</>
 			)
 		}
-	</JobList>
+	</PetList>
 </Layout>

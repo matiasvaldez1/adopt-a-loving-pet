@@ -25,7 +25,6 @@ const { sortOptions, selectedSort } = Astro.props;
 <script>
 	document.querySelector('#sorting')?.addEventListener('change', (e) => {
 		e.preventDefault();
-		// @ts-expect-error
 		document
 			.getElementById('sortInput')
 			?.setAttribute('value', document.getElementById('sorting')?.value);

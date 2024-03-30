@@ -1,117 +1,119 @@
-import { Company, JobPosting, JobType, db } from 'astro:db';
+import { PetPosting, PetType, Poster, db } from "astro:db";
 
 export default async function seed() {
-	const companies = await db
-		.insert(Company)
-		.values([
-			{
-				title: 'Astro',
-				description: 'Open-source website framework with a focus on content',
-				logo: 'https://pbs.twimg.com/profile_images/1632785343433908224/SnMGR19O_400x400.png',
-			},
-			{
-				title: 'Meta',
-				description:
-					'Meta is a company that is focused on building the metaverse and other buzzwords',
-				logo: 'https://pbs.twimg.com/profile_images/1453818753880190978/HqrrEcrI_400x400.png',
-			},
-			{
-				title: 'Slack',
-				description: 'Workspace application',
-				logo: 'https://pbs.twimg.com/profile_images/1461144163789983748/N5iAWd2d_400x400.jpg',
-			},
-		])
-		.returning();
+  const posters = await db
+    .insert(Poster)
+    .values([
+      {
+        name: "Fernanda",
+        presentation: "Soltera amante de las mascotas",
+        profilePicture:
+          "https://pbs.twimg.com/profile_images/1632785343433908224/SnMGR19O_400x400.png",
+      },
+      {
+        name: "Casa de perros miguel",
+        presentation: "Somos una casa de perros que se dedica a etc",
+        profilePicture:
+          "https://pbs.twimg.com/profile_images/1453818753880190978/HqrrEcrI_400x400.png",
+      },
+      {
+        name: "Marta",
+        presentation: "Abuela de 3 enamorada de los animales",
+        profilePicture:
+          "https://pbs.twimg.com/profile_images/1461144163789983748/N5iAWd2d_400x400.jpg",
+      },
+    ])
+    .returning();
 
-	const jobtypes = await db
-		.insert(JobType)
-		.values([
-			{
-				title: 'Full-time',
-				value: 'full-time',
-			},
-			{
-				title: 'Half-time',
-				value: 'half-time',
-			},
-			{
-				title: 'Contract',
-				value: 'contract',
-			},
-			{
-				title: 'Internship',
-				value: 'internship',
-			},
-		])
-		.returning();
+  const petTypes = await db
+    .insert(PetType)
+    .values([
+      {
+        title: "Labrador Retriever",
+        value: "labrador_retriever",
+      },
+      {
+        title: "Bulldog",
+        value: "bulldog",
+      },
+      {
+        title: "Golden Retriever",
+        value: "golden_retriever",
+      },
+      {
+        title: "German Shepherd",
+        value: "german_shepherd",
+      },
+    ])
+    .returning();
 
-	await db.insert(JobPosting).values([
-		{
-			title: 'Senior UX Writer',
-			companyId: companies[0].id,
-			description: 'Open-source website framework with a focus on content',
-			type: jobtypes[0].id,
-			location: 'New York, NY',
-			posted: new Date('2022-12-13'),
-			richText: `<h2>About the role</h2>
-			<p>
-				As the first Product Design hire at PermitFlow, you will work with the
-				CTO and engineering team to lead and execute design and strategy of
-				PermitFlow's product experience. We are the leading construction permit
-				application software for builders. Our current team consists of
-				engineers from Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford, and
-				more.
-			</p>`,
-		},
-		{
-			title: 'Junior whatever',
-			companyId: companies[2].id,
-			description: 'Workspace application',
-			type: jobtypes[1].id,
-			location: 'Remote',
-			posted: new Date('2021-12-13'),
-			richText: `<h2>About the role</h2>
-		<p>
-			As the first Product Design hire at PermitFlow, you will work with the
-			CTO and engineering team to lead and execute design and strategy of
-			PermitFlow's product experience. We are the leading construction permit
-			application software for builders. Our current team consists of
-			engineers from Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford, and
-			more.
-		</p>`,
-		},
-		{
-			title: 'Amazing role',
-			companyId: companies[1].id,
-			description: 'Building a new meta-verse or whatever other buzzword',
-			type: jobtypes[0].id,
-			location: 'Ghent, Belgium',
-			posted: new Date('12/13/2020'),
-			richText: `<h2>About the role</h2>
-		<p>
-			As the first Amazing Role  hire at meta, you will work with the
-			CTO and engineering team to lead and execute design and strategy of
-			PermitFlow's product experience. We are the leading construction permit
-			application software for builders. Our current team consists of
-			engineers from Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford, and
-			more.
-		</p>`,
-		},
-		{
-			title: 'Remote Assistant',
-			companyId: companies[0].id,
-			description: 'Open-source website framework with a focus on content',
-			type: jobtypes[2].id,
-			location: 'Remote',
-			posted: new Date('2019-12-13'),
-			richText: `<h2>About the role</h2>
-			<p>
-				As a remote assistant, you will work with the CTO and engineering team to
-				lead and execute design and strategy of PermitFlow's product experience.
-				We are the leading construction permit application software for builders.
-				Our current team consists of engineers from Uber, Amazon, Stripe,
-				NerdWallet, Harvard, Stanford, and more.
-			</p>`,
-		},
-	]);
+  await db.insert(PetPosting).values([
+    {
+      title: "Cachorros de Labrador Retriever",
+      posterId: posters[0].id,
+      description:
+        "Adorables cachorros de Labrador Retriever buscando hogares amorosos.",
+      type: petTypes[0].id,
+      location: "Nueva York, NY",
+      posted: new Date("2022-12-13"),
+      richText: `<h2>Sobre el puesto</h2>
+			  <p>
+				  Como el primer contratado en diseño de productos en PermitFlow, trabajarás con el
+				  CTO y el equipo de ingeniería para liderar y ejecutar el diseño y la estrategia de
+				  la experiencia del producto de PermitFlow. Somos el software líder en aplicaciones de permisos de construcción
+				  para constructores. Nuestro equipo actual está formado por ingenieros de Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford y
+				  más.
+			  </p>`,
+    },
+    {
+      title: "Mezcla de Bulldog en Adopción",
+      posterId: posters[2].id,
+      description:
+        "Dulce mezcla de Bulldog que necesita un hogar para siempre.",
+      type: petTypes[1].id,
+      location: "Remoto",
+      posted: new Date("2021-12-13"),
+      richText: `<h2>Sobre el puesto</h2>
+		  <p>
+			  Como el primer contratado en diseño de productos en PermitFlow, trabajarás con el
+			  CTO y el equipo de ingeniería para liderar y ejecutar el diseño y la estrategia de
+			  la experiencia del producto de PermitFlow. Somos el software líder en aplicaciones de permisos de construcción
+			  para constructores. Nuestro equipo actual está formado por ingenieros de Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford y
+			  más.
+		  </p>`,
+    },
+    {
+      title: "Rescate de Golden Retriever",
+      posterId: posters[1].id,
+      description:
+        "Golden Retriever rescatado buscando una segunda oportunidad.",
+      type: petTypes[0].id,
+      location: "Gante, Bélgica",
+      posted: new Date("12/13/2020"),
+      richText: `<h2>Sobre el puesto</h2>
+		  <p>
+			  Como el primer contratado en un rol increíble en meta, trabajarás con el
+			  CTO y el equipo de ingeniería para liderar y ejecutar el diseño y la estrategia de
+			  la experiencia del producto de PermitFlow. Somos el software líder en aplicaciones de permisos de construcción
+			  para constructores. Nuestro equipo actual está formado por ingenieros de Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford y
+			  más.
+		  </p>`,
+    },
+    {
+      title: "Asistente Remoto",
+      posterId: posters[0].id,
+      description:
+        "Marco de trabajo de sitio web de código abierto con enfoque en contenido",
+      type: petTypes[2].id,
+      location: "Remoto",
+      posted: new Date("2019-12-13"),
+      richText: `<h2>Sobre el puesto</h2>
+			  <p>
+				  Como asistente remoto, trabajarás con el CTO y el equipo de ingeniería para
+				  liderar y ejecutar el diseño y la estrategia de la experiencia del producto de PermitFlow.
+				  Somos el software líder en aplicaciones de permisos de construcción para constructores.
+				  Nuestro equipo actual está formado por ingenieros de Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford y más.
+			  </p>`,
+    },
+  ]);
 }

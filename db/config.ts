@@ -1,15 +1,15 @@
 import { NOW, column, defineDb, defineTable } from 'astro:db';
 
-export const Company = defineTable({
+export const Poster = defineTable({
 	columns: {
-		id: column.number({ primaryKey: true }),
-		title: column.text(),
-		description: column.text(),
-		logo: column.text(),
+		id: column.number({ primaryKey: true, }),
+		name: column.text(),
+		presentation: column.text(),
+		profilePicture: column.text(),
 	},
 });
 
-export const JobType = defineTable({
+export const PetType = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
 		title: column.text(),
@@ -17,13 +17,13 @@ export const JobType = defineTable({
 	},
 });
 
-export const JobPosting = defineTable({
+export const PetPosting = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
 		title: column.text(),
-		companyId: column.number({ references: () => Company.columns.id }),
+		posterId: column.number({ references: () => Poster.columns.id }),
 		description: column.text(),
-		type: column.number({ references: () => JobType.columns.id }),
+		type: column.number({ references: () => PetType.columns.id }),
 		location: column.text(),
 		posted: column.date({ default: NOW }),
 		richText: column.text({ optional: true }),
@@ -33,8 +33,8 @@ export const JobPosting = defineTable({
 // https://astro.build/db/config
 export default defineDb({
 	tables: {
-		JobPosting,
-		Company,
-		JobType,
+		Poster,
+		PetPosting,
+		PetType,
 	},
 });
