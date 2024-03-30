@@ -54,7 +54,7 @@ query.where(
 	and(
 		like(PetPosting.title, keyword === null ? `%%` : `%${keyword}%`),
 		// @ts-ignore
-		type !== '' && typeof type === 'string' ? eq(JobType.value, type) : true,
+		type !== '' && typeof type === 'string' ? eq(PetType.value, type) : true,
 		// @ts-ignore
 		location !== '' && typeof location === 'string' ? eq(PetPosting.location, location) : true,
 	),
@@ -74,7 +74,7 @@ returnedPets = await query.execute();
 
 <Layout>
 	<section class="relative mb-10 mt-32">
-		<h1>Tu nueva mascota te está esperando</h1>
+		<h1>Tu nueva mascota te está esperando 😊</h1>
 		<FormFilter {prefilled} {types} {locations} {sorting} {location} {type} />
 	</section>
 	<PetList>

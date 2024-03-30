@@ -13,7 +13,7 @@ interface Props {
 const { pet, poster, type } = Astro.props;
 ---
 
-<li class="flex flex-col rounded-sm bg-white p-6 dark:bg-black">
+<li class="flex flex-col rounded-md bg-white p-6 dark:bg-black">
 	<div class="flex flex-col md:flex-row md:items-start md:justify-between">
 		<div class="flex flex-col items-center gap-4 md:flex-row">
 			<Image alt="" src={poster.profilePicture} class="size-20 flex-shrink-0 rounded-md" inferSize />
